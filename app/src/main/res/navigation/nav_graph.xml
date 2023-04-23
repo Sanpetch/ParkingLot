@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/WelcomeFragment">
+
+    <fragment
+        android:id="@+id/WelcomeFragment"
+        android:name="com.example.parkinglot.ui.WelcomeFragment"
+        android:label="Parking Lot"
+        tools:layout="@layout/fragment_first">
+
+        <action
+            android:id="@+id/action_Welcome_to_LoginFragment"
+            app:destination="@id/LoginFragment" />
+        <action
+            android:id="@+id/action_Welcome_to_RegisterFragment"
+            app:destination="@id/RegisterFragment" />
+    </fragment>
+
+
+    <fragment
+        android:id="@+id/LoginFragment"
+        android:name="com.example.parkinglot.ui.LoginFragment"
+        android:label="Login"
+        tools:layout="@layout/fragment_login">
+
+        <action
+            android:id="@+id/action_LoginFragment_to_WelcomeFragment"
+            app:destination="@id/WelcomeFragment" />
+    </fragment>
+
+
+    <fragment
+        android:id="@+id/RegisterFragment"
+        android:name="com.example.parkinglot.ui.RegisterFragment"
+        android:label="Register"
+        tools:layout="@layout/fragment_register">
+
+    <action
+        android:id="@+id/action_RegisterFragment_to_WelcomeFragment"
+        app:destination="@id/WelcomeFragment" />
+    </fragment>
+</navigation>

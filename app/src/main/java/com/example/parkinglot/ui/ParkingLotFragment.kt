@@ -1,20 +1,17 @@
 package com.example.parkinglot.ui
 
-import android.content.Intent
 import android.os.Bundle
-import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.parkinglot.R
 import com.example.parkinglot.ViewModel.ParkingLotViewModel
 import com.example.parkinglot.ViewModel.UserViewModel
 import com.example.parkinglot.databinding.FragmentParkinglotBinding
-import com.example.parkinglot.model.LoginRequest
 import com.example.parkinglot.model.ParkingLotsCheckOutRequest
 import com.example.parkinglot.util.Resource
 import com.example.parkinglot.util.SharedPrefManager
@@ -38,6 +35,7 @@ class ParkingLotFragment : Fragment() {
     lateinit var sharedPrefManager : SharedPrefManager
     private val userViewModel: UserViewModel by viewModels()
     private val parkingLotViewModel: ParkingLotViewModel by viewModels()
+    private val recycler: RecyclerView? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -54,13 +52,15 @@ class ParkingLotFragment : Fragment() {
 
         binding.welcome.text = getString(R.string.welcome, sharedPrefManager.readUser())
         licensePlate = sharedPrefManager.readLicensePlate()
+        binding.recyclerView.layoutManager = LinearLayoutManager(context)
+
         binding.checkout.setOnClickListener {
 
             val parkingLotsCheckOutRequest = ParkingLotsCheckOutRequest(parking_id!!,licensePlate!!, parkingNumber!!,"check_out",true);
 
             parkingLotViewModel.checkOut(parkingLotsCheckOutRequest)
         }
-
+        parkingLotViewModel.getAllParking()
 
         observe();
     }
@@ -73,6 +73,25 @@ class ParkingLotFragment : Fragment() {
 
 
     fun observe() {
+        parkingLotViewModel.getParkingLots.observe(viewLifecycleOwner){
+            when (it) {
+                is Resource.Success -> {
+                    val adapter = ParkingLotAdapter(it.data,context)
+                    binding.recyclerView.adapter = adapter
+                    binding.recyclerView.adapter?.notifyDataSetChanged()
+                }
+                is Resource.Error -> {
+
+
+                }
+                is Resource.Loading ->{
+
+                }
+                else -> {}
+            }
+        }
+
+
         parkingLotViewModel.licenseLiveData.observe(viewLifecycleOwner) {
             when (it) {
                 is Resource.Success -> {
@@ -96,7 +115,7 @@ class ParkingLotFragment : Fragment() {
             when (it) {
                 is Resource.Success -> {
                     binding.parkinglot.text = getString(R.string.parking_slot_number,  "-")
-
+                    parkingLotViewModel.getAllParking()
                 }
                 is Resource.Error -> {
 

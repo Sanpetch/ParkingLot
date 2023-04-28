@@ -1,5 +1,6 @@
 package com.example.parkinglot.ui
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -17,7 +18,9 @@ import com.example.parkinglot.databinding.FragmentRegisterBinding
 import com.example.parkinglot.model.LoginRequest
 import com.example.parkinglot.model.RegisterRequest
 import com.example.parkinglot.util.Resource
+import com.example.parkinglot.util.SharedPrefManager
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 
 @AndroidEntryPoint
@@ -27,6 +30,9 @@ class RegisterFragment : Fragment() {
     private val binding get() = _binding!!
 
     private val registerViewModel: RegisterViewModel by viewModels()
+
+    @Inject
+    lateinit var sharedPrefManager : SharedPrefManager
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -84,8 +90,15 @@ class RegisterFragment : Fragment() {
                     Toast.makeText(requireContext(), it.data?.message, Toast.LENGTH_SHORT).show()
                     it.data?.let { loginData ->
                         {
-//                            Toast.makeText(requireContext(), loginData.message, Toast.LENGTH_SHORT).show()
-//                            Log.d("Error", "Error: $loginData")
+                            sharedPrefManager.saveUser(binding.edtUsername.editableText.toString(),
+                                binding.edtLicensePlate.editableText.toString())
+//
+                            sharedPrefManager.readUser()?.let{
+                                val intent = Intent(context, ParkingLotActivity::class.java)
+                                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                                startActivity(intent)
+                            }
+
 
                         }
 

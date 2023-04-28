@@ -21,6 +21,7 @@ class ParkingLotViewModel  @Inject constructor(
     val pkFirstAvailableLiveData: MutableLiveData<Resource<ParkingLotsResponse>> = MutableLiveData()
     val licenseLiveData: MutableLiveData<Resource<ParkingLotsResponse>> = MutableLiveData()
     val checkOutData: MutableLiveData<Resource<MessageResponse>> = MutableLiveData()
+    val getParkingLots: MutableLiveData<Resource<List<ParkingLotsResponse>>> = MutableLiveData()
 
 
     fun getPkFirstAvailable(){
@@ -33,6 +34,19 @@ class ParkingLotViewModel  @Inject constructor(
             }
         }catch (ex:Exception){
             pkFirstAvailableLiveData.value = Resource.Error(message = ex.message!!)
+        }
+    }
+
+    fun getAllParking(){
+        getParkingLots.value = Resource.Loading()
+        try {
+            viewModelScope.launch {
+
+                val response = repository.getAllParkingLot()
+                getParkingLots.value = handleListParkingResponse(response)
+            }
+        }catch (ex:Exception){
+            getParkingLots.value = Resource.Error(message = ex.message!!)
         }
     }
 
@@ -75,6 +89,15 @@ class ParkingLotViewModel  @Inject constructor(
     }
 
     private fun handleResponse(response:  Response<MessageResponse>): Resource<MessageResponse> {
+        if (response.isSuccessful) {
+            response.body()?.let { resultResponse ->
+                return Resource.Success(resultResponse)
+            }
+        }
+        return Resource.Error(response.message())
+    }
+
+    private fun handleListParkingResponse(response: Response<List<ParkingLotsResponse>>): Resource<List<ParkingLotsResponse>> {
         if (response.isSuccessful) {
             response.body()?.let { resultResponse ->
                 return Resource.Success(resultResponse)

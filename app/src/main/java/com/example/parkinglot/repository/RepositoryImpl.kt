@@ -27,9 +27,15 @@ class RepositoryImpl(
         return  apiServices.getSlotByLicensePlate(id)
     }
 
+    override suspend fun getAllParkingLot(): Response<List<ParkingLotsResponse>> {
+        return  apiServices.getAllParking()
+    }
+
     override suspend fun checkOut(parkingLotsCheckOutRequest: ParkingLotsCheckOutRequest): Response<MessageResponse> {
         return  apiServices.checkOut(parkingLotsCheckOutRequest)
     }
+
+
 
 
 }

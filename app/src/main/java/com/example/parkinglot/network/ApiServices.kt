@@ -15,6 +15,9 @@ interface ApiServices {
     @POST("/user/create")
     suspend fun register(@Body registerRequest: RegisterRequest):Response<RegisterResponse>
 
+    @GET("/parkingLots")
+    suspend fun getAllParking():Response<List<ParkingLotsResponse>>
+
     @GET("/parkingLots/findFirstAvailable")
     suspend fun getFirstParkingSlot():Response<ParkingLotsResponse>
 

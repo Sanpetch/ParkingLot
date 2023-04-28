@@ -14,5 +14,6 @@
     <string name="title_activity_parking_lot">ParkingLotActivity</string>
 
     <string name="welcome">Welcome %1$s</string>
-    <string name="parking_slot_number">Parking Slot Number: %1$s</string>
+    <string name="parking_slot_number">Your Parking No: %1$s</string>
+    <string name="parking">Parking: %1$s</string>
 </resources>

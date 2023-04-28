@@ -11,6 +11,8 @@ interface Repository {
     suspend fun getFirstParkingSlot() : Response<ParkingLotsResponse>
     suspend fun getSlotByLicensePlate(id:String) : Response<ParkingLotsResponse>
 
+    suspend fun getAllParkingLot() : Response<List<ParkingLotsResponse>>
+
     suspend fun checkOut(parkingLotsCheckOutRequest: ParkingLotsCheckOutRequest) : Response<MessageResponse>
 
 }
